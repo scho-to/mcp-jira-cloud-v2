@@ -1,8 +1,5 @@
 import { Version2Client } from 'jira.js';
-import * as dotenv from 'dotenv';
-import { Issue } from 'jira.js/out/version2/models';
-
-dotenv.config();
+import { Issue } from 'jira.js/dist/version2/models';
 
 export class JiraClient {
   private client: Version2Client;
