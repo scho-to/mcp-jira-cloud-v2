@@ -4,8 +4,7 @@ This is a Message Communication Protocol (MCP) server designed to interact with 
 
 ## Prerequisites
 
-- Node.js (Recommended version: >= 18.x)
-- npm or yarn
+- Bun (Recommended version: >= 1.0.x)
 - Jira Cloud instance
 - Jira API Token
 
@@ -19,13 +18,8 @@ This is a Message Communication Protocol (MCP) server designed to interact with 
     ```
 
 2.  **Install dependencies:**
-    Using npm:
     ```bash
-    npm install
-    ```
-    Or using yarn:
-    ```bash
-    yarn install
+    bun install
     ```
 
 ## Configuration
@@ -49,16 +43,8 @@ JIRA_API_TOKEN=your-api-token
 ## Usage
 
 1.  **Start the server:**
-    Using npm:
-
     ```bash
-    npm start
-    ```
-
-    Or using yarn:
-
-    ```bash
-    yarn start
+    bun run start
     ```
 
 2.  **Interact via MCP:**
@@ -70,28 +56,13 @@ You can test the Jira client functionality directly using the `simpleTest.ts` sc
 
 2.  **Run the test script:**
     Provide a Jira ticket ID as an argument.
-    Using npm:
-
     ```bash
-    npm test <JIRA_TICKET_ID>
+    bun run test <JIRA_TICKET_ID>
     ```
-
-    Or using yarn:
-
-    ```bash
-    yarn test <JIRA_TICKET_ID>
-    ```
-
-    Replace `<JIRA_TICKET_ID>` with an actual ticket ID from your Jira instance.
 
 3.  **Run the test script in development mode (with hot-reloading):**
-    Using npm:
     ```bash
-    npm run dev <JIRA_TICKET_ID>
-    ```
-    Or using yarn:
-    ```bash
-    yarn dev <JIRA_TICKET_ID>
+    bun run dev <JIRA_TICKET_ID>
     ```
     This is useful for rapid iteration during development.
 
@@ -101,16 +72,8 @@ The project is built using the TypeScript compiler. This compiles the TypeScript
 
 To build the project:
 
-Using npm:
-
 ```bash
-npm run build
-```
-
-Or using yarn:
-
-```bash
-yarn run build
+bun run build
 ```
 
 ## MCP Server Configuration
@@ -121,7 +84,7 @@ To set up this server within an MCP environment, add the following configuration
 {
   "mcpServers": {
     "jira-requester": {
-      "command": "node",
+      "command": "bun",
       "env": {
         "JIRA_URL": "https://your-instance.atlassian.net",
         "JIRA_USER_EMAIL": "your-email@example.com",
@@ -160,4 +123,3 @@ Fetches details for a specific Jira ticket.
     "expand": ["renderedFields"]
   }
 }
-```
