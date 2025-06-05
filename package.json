@@ -9,11 +9,11 @@
     "dev": "bun --watch src/simpleTest.ts"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.11.2",
-    "jira.js": "^5.1.1"
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "jira.js": "^5.2.0"
   },
   "devDependencies": {
-    "@types/bun": "^1.2.13",
+    "@types/bun": "^1.2.15",
     "ts-node": "^10.9.2"
   }
 }
