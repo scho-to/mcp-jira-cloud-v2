@@ -4,7 +4,7 @@
   "main": "build/index.js",
   "type": "module",
   "scripts": {
-    "build": "bun build src/index.ts --outdir build --target bun",
+    "build": "bun build src/index.ts --outdir build --target node",
     "test": "bun build/simpleTest.js",
     "dev": "bun --watch src/simpleTest.ts"
   },
