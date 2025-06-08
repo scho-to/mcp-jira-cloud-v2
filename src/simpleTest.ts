@@ -10,10 +10,13 @@ async function runTest() {
 
   try {
     const jiraClient = new JiraClient();
-    const ticket = await jiraClient.getTicket(ticketId, ['summary', 'description']);
+    // Call getTicket without the explicit fields array
+    const ticket = await jiraClient.getTicket(ticketId); // No expand, no fields
 
     console.log(`Summary: ${ticket.fields.summary}`);
     console.log(`Description: ${ticket.fields.description}`);
+    // Add console.log for comments
+    console.log(`Comments: ${JSON.stringify(ticket.fields.comment, null, 2)}`);
 
   } catch (error: any) {
     console.error(`Error fetching ticket ${ticketId}: ${error.message}`);
