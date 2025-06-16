@@ -22,10 +22,11 @@ export class JiraClient {
 
   async getTicket(ticketId: string, expand?: string[], fields?: string[]): Promise<Issue> {
     try {
+      const effectiveFields = fields && fields.length > 0 ? fields : ["summary", "description", "comment"];
       const params = {
         issueIdOrKey: ticketId,
         expand: expand?.join(','),
-        fields
+        fields: effectiveFields
       };
       return await this.client.issues.getIssue(params);
     } catch (error: unknown) {
