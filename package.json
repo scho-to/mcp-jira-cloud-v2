@@ -4,16 +4,18 @@
   "main": "build/index.js",
   "type": "module",
   "scripts": {
-    "build": "bun build src/index.ts --outdir build --target node",
-    "test": "bun build/simpleTest.js",
-    "dev": "bun --watch src/simpleTest.ts"
+    "build": "tsc",
+    "start": "node build/index.js",
+    "dev": "tsx watch src/index.ts",
+    "test": "tsx src/simpleTest.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
     "jira.js": "^5.2.0"
   },
   "devDependencies": {
-    "@types/bun": "^1.2.15",
-    "ts-node": "^10.9.2"
+    "typescript": "^5.0.0",
+    "tsx": "^4.7.0",
+    "@types/node": "^20.0.0"
   }
 }
