@@ -1,21 +1,16 @@
 {
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "build", "src/simpleTest.ts"],
+  "exclude": ["node_modules", "build"],
   "compilerOptions": {
     "lib": ["ES2024"],
     "target": "ES2024",
-    "module": "CommonJS",
-    //"outDir": "./build",
-    //"rootDir": "./src",
-    "moduleDetection": "force",
-    //"jsx": "react-jsx",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./build",
+    "rootDir": "./src",
+    // "moduleDetection": "force", // Usually not needed with NodeNext
     "allowJs": true,
-
-    // Bundler mode
-    //"moduleResolution": "bundler",
-    //"allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": false,
-    //"noEmit": true,
+    "verbatimModuleSyntax": true, // Recommended for ESM
 
     // Best practices
     "strict": true,
@@ -27,5 +22,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false,
+    "declaration": true, // Optional: generate .d.ts files
+    "sourceMap": true // Optional: generate source maps
   }
 }

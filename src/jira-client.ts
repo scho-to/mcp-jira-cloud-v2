@@ -1,5 +1,4 @@
-import { Version2Client } from 'jira.js';
-import { Issue } from 'jira.js/dist/version2/models';
+import { Version2Client, Issues as Issue } from 'jira.js/version2';
 
 export class JiraClient {
   private client: Version2Client;
