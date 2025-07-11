@@ -4,7 +4,8 @@ This is a Message Communication Protocol (MCP) server designed to interact with 
 
 ## Prerequisites
 
-- Bun (Recommended version: >= 1.0.x)
+- Node.js (Recommended version: >= 20.x.x)
+- npm (comes with Node.js)
 - Jira Cloud instance
 - Jira API Token
 
@@ -19,61 +20,66 @@ This is a Message Communication Protocol (MCP) server designed to interact with 
 
 2.  **Install dependencies:**
     ```bash
-    bun install
+    npm install
     ```
 
 ## Configuration
 
 This server requires environment variables for Jira authentication and connection:
 
-- `JIRA_BASE_URL`: The base URL of your Jira instance (e.g., `https://your-domain.atlassian.net`).
+- `JIRA_URL`: The base URL of your Jira instance (e.g., `https://your-domain.atlassian.net`).
 - `JIRA_USER_EMAIL`: The email address associated with your Jira account.
 - `JIRA_API_TOKEN`: Your Jira API token. You can generate one from your Atlassian account settings.
 
-Create a `.env` file in the project root and add these variables:
+Create a `.env` file in the project root and add these variables (or set them in your environment):
 
 ```dotenv
-JIRA_BASE_URL=https://your-domain.atlassian.net
+JIRA_URL=https://your-domain.atlassian.net
 JIRA_USER_EMAIL=your-email@example.com
 JIRA_API_TOKEN=your-api-token
 ```
 
-**Important:** Add `.env` to your `.gitignore` file to avoid committing sensitive credentials.
+**Important:** If you use a `.env` file, ensure it's added to your `.gitignore` to avoid committing sensitive credentials.
 
 ## Usage
 
-1.  **Start the server:**
+1.  **Build the project:**
     ```bash
-    bun run start
+    npm run build
     ```
 
-2.  **Interact via MCP:**
-    Once the server is running, it will listen for MCP requests. Clients can interact with it by sending tool calls.
+2.  **Start the server (after building):**
+    ```bash
+    npm start
+    ```
+    Alternatively, to run the server in development mode with hot-reloading (compiles and runs):
+    ```bash
+    npm run dev
+    ```
+
+3.  **Interact via MCP:**
+    Once the server is running (either via `npm start` or `npm run dev`), it will listen for MCP requests.
 
 ## Testing
 
-You can test the Jira client functionality directly using the `simpleTest.ts` script.
+You can test the Jira client functionality directly using the `simpleTest.ts` script. This script requires Jira credentials to be set as environment variables.
 
-2.  **Run the test script:**
+1.  **Run the test script:**
     Provide a Jira ticket ID as an argument.
     ```bash
-    bun run test <JIRA_TICKET_ID>
+    npm test -- <JIRA_TICKET_ID>
     ```
+    (The `--` is important for passing arguments to the script via npm)
 
-3.  **Run the test script in development mode (with hot-reloading):**
-    ```bash
-    bun run dev <JIRA_TICKET_ID>
-    ```
-    This is useful for rapid iteration during development.
 
 ## Building
 
-The project is built using the TypeScript compiler. This compiles the TypeScript source files (`.ts`) into JavaScript files (`.js`) in the `build` directory.
+The project is built using the TypeScript compiler (`tsc`). This compiles the TypeScript source files (`.ts`) from `src` into JavaScript files (`.js`) in the `build` directory.
 
 To build the project:
 
 ```bash
-bun run build
+npm run build
 ```
 
 ## MCP Server Configuration
@@ -84,7 +90,7 @@ To set up this server within an MCP environment, add the following configuration
 {
   "mcpServers": {
     "jira-requester": {
-      "command": "bun",
+      "command": "node",
       "env": {
         "JIRA_URL": "https://your-instance.atlassian.net",
         "JIRA_USER_EMAIL": "your-email@example.com",
