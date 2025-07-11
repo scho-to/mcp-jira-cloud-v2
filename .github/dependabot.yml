@@ -4,6 +4,8 @@ updates:
     directory: "/" # Assuming package.json is in the root
     schedule:
       interval: "daily"
+    ignore:
+      - dependency-name: "@types/node"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
