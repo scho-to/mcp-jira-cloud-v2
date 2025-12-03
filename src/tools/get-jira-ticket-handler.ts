@@ -34,7 +34,34 @@ export class GetJiraTicketHandler implements IToolHandler {
 
   constructor(private readonly jiraClient: IJiraClient) {}
 
-  validate(args: unknown): args is GetTicketArgs {
+  validate(args: unknown): boolean {
+    return this.isValidArgs(args);
+  }
+
+  async execute(args: unknown): Promise<ToolResult> {
+    if (!this.isValidArgs(args)) {
+      return {
+        content: [{ type: 'text', text: 'Invalid arguments for get_jira_ticket' }],
+        isError: true
+      };
+    }
+
+    const validArgs: GetTicketArgs = args;
+    const ticket = await this.jiraClient.getTicket(
+      validArgs.ticket_id,
+      validArgs.expand,
+      validArgs.fields
+    );
+
+    return {
+      content: [{
+        type: 'text',
+        text: JSON.stringify(ticket, null, 2)
+      }]
+    };
+  }
+
+  private isValidArgs(args: unknown): args is GetTicketArgs {
     if (typeof args !== 'object' || args === null) {
       return false;
     }
@@ -54,28 +81,6 @@ export class GetJiraTicketHandler implements IToolHandler {
     }
 
     return true;
-  }
-
-  async execute(args: unknown): Promise<ToolResult> {
-    if (!this.validate(args)) {
-      return {
-        content: [{ type: 'text', text: 'Invalid arguments for get_jira_ticket' }],
-        isError: true
-      };
-    }
-
-    const ticket = await this.jiraClient.getTicket(
-      args.ticket_id,
-      args.expand,
-      args.fields
-    );
-
-    return {
-      content: [{
-        type: 'text',
-        text: JSON.stringify(ticket, null, 2)
-      }]
-    };
   }
 
   private isStringArray(value: unknown): value is string[] {

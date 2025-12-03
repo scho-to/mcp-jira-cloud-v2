@@ -1,6 +1,28 @@
 import { JiraClient } from './jira-client.js';
 import { createJiraConfigFromEnv } from './config/index.js';
 
+/**
+ * Interface for ticket fields returned by Jira API.
+ * This represents the subset of fields we're interested in for testing.
+ */
+interface TicketFields {
+  summary?: string;
+  description?: string;
+  comment?: {
+    comments?: Array<{
+      body?: string;
+      author?: { displayName?: string };
+    }>;
+  };
+}
+
+/**
+ * Interface for the Jira issue response structure.
+ */
+interface JiraIssueResponse {
+  fields?: TicketFields;
+}
+
 async function runTest(): Promise<void> {
   const ticketId = process.argv[2];
 
@@ -15,16 +37,14 @@ async function runTest(): Promise<void> {
     // Call getTicket without the explicit fields array
     const ticket = await jiraClient.getTicket(ticketId); // No expand, no fields
 
-    // Assuming 'ticket' itself contains the fields directly, or the type is too broad.
-    // We'll cast to `any` for now to bypass TS error and see at runtime if data exists.
-    const ticketData = ticket as unknown as Record<string, unknown>;
+    // Cast to proper interface structure
+    const ticketData = ticket as JiraIssueResponse;
+    const fields = ticketData.fields;
 
-    console.log(`Summary: ${ticketData['summary']}`);
-    console.log(`Description: ${ticketData['description']}`);
-    // Add console.log for comments
+    console.log(`Summary: ${fields?.summary ?? 'N/A'}`);
+    console.log(`Description: ${fields?.description ?? 'N/A'}`);
     // The 'comment' field is often an object with a 'comments' array.
-    // Let's log the whole comment object if it exists, or just ticketData.comment
-    console.log(`Comments: ${JSON.stringify(ticketData['comment'], null, 2)}`);
+    console.log(`Comments: ${JSON.stringify(fields?.comment, null, 2)}`);
 
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
