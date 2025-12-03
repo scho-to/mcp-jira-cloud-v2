@@ -7,12 +7,26 @@ import {
   ErrorCode
 } from '@modelcontextprotocol/sdk/types.js';
 import { JiraClient } from './jira-client.js';
+import { createJiraConfigFromEnv } from './config/index.js';
+import { ToolRegistry, GetJiraTicketHandler } from './tools/index.js';
+import type { IToolRegistry, IJiraClient } from './types/index.js';
 
+/**
+ * MCP Server for Jira integration.
+ * Follows SRP by delegating tool handling to the registry.
+ * Follows DIP by depending on abstractions (IToolRegistry, IJiraClient).
+ * Follows OCP by allowing new tools to be registered without modification.
+ */
 class JiraRequesterServer {
-  private server: Server;
-  private jiraClient: JiraClient;
+  private readonly server: Server;
+  private readonly toolRegistry: IToolRegistry;
 
-  constructor() {
+  /**
+   * Creates a new JiraRequesterServer.
+   * @param jiraClient - Jira client for API operations (DIP)
+   * @param toolRegistry - Registry for tool handlers (DIP)
+   */
+  constructor(jiraClient: IJiraClient, toolRegistry: IToolRegistry) {
     this.server = new Server(
       {
         name: 'jira-requester',
@@ -26,74 +40,46 @@ class JiraRequesterServer {
       }
     );
 
-    this.jiraClient = new JiraClient();
-    this.setupToolHandlers();
+    this.toolRegistry = toolRegistry;
+    this.registerTools(jiraClient);
+    this.setupRequestHandlers();
     
     this.server.onerror = (error) => console.error('[Jira Requester Error]', error);
   }
 
-  private setupToolHandlers() {
+  /**
+   * Registers all available tools.
+   * Follows OCP - add new tools here without modifying other methods.
+   */
+  private registerTools(jiraClient: IJiraClient): void {
+    this.toolRegistry.register(new GetJiraTicketHandler(jiraClient));
+    // Add more tool handlers here as needed
+  }
+
+  /**
+   * Sets up MCP request handlers.
+   * Follows SRP by only handling MCP protocol concerns.
+   */
+  private setupRequestHandlers(): void {
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
-      tools: [{
-        name: 'get_jira_ticket',
-        description: 'Fetch a Jira ticket by ID',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            ticket_id: {
-              type: 'string',
-              description: 'Jira ticket ID (e.g. PROJ-123)'
-            },
-            expand: {
-              type: 'array',
-              items: { type: 'string' },
-              description: 'Optional fields to expand'
-            },
-            fields: {
-              type: 'array',
-              items: { type: 'string' },
-              description: 'Optional fields to include in response'
-            }
-          },
-          required: ['ticket_id']
-        }
-      }]
+      tools: [...this.toolRegistry.getAllTools()]
     }));
 
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
-      if (request.params.name !== 'get_jira_ticket') {
+      const handler = this.toolRegistry.getHandler(request.params.name);
+      
+      if (!handler) {
         throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${request.params.name}`);
       }
 
-      interface JiraTicketArgs {
-        ticket_id: string;
-        expand?: string[];
-        fields?: string[];
-      }
-
-      const isValidArgs = (args: unknown): args is JiraTicketArgs => 
-        typeof args === 'object' && 
-        args !== null && 
-        'ticket_id' in args && 
-        typeof (args as JiraTicketArgs).ticket_id === 'string' &&
-        (args as JiraTicketArgs).expand === undefined || Array.isArray((args as JiraTicketArgs).expand) &&
-        (args as JiraTicketArgs).fields === undefined || Array.isArray((args as JiraTicketArgs).fields);
-
-      if (!isValidArgs(request.params.arguments)) {
-        throw new McpError(ErrorCode.InvalidParams, 'Invalid arguments for get_jira_ticket');
+      if (!handler.validate(request.params.arguments)) {
+        throw new McpError(ErrorCode.InvalidParams, `Invalid arguments for ${request.params.name}`);
       }
 
       try {
-        const ticket = await this.jiraClient.getTicket(
-          request.params.arguments.ticket_id, 
-          request.params.arguments.expand,
-          request.params.arguments.fields
-        );
+        const result = await handler.execute(request.params.arguments);
         return {
-          content: [{
-            type: 'text',
-            text: JSON.stringify(ticket, null, 2)
-          }]
+          content: [...result.content]
         };
       } catch (error) {
         throw new McpError(
@@ -104,12 +90,24 @@ class JiraRequesterServer {
     });
   }
 
-  async run() {
+  async run(): Promise<void> {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
     console.error('Jira Requester MCP server running on stdio');
   }
 }
 
-const server = new JiraRequesterServer();
-server.run().catch(console.error);
+/**
+ * Application entry point.
+ * Composition root - creates and wires all dependencies.
+ */
+function main(): void {
+  const config = createJiraConfigFromEnv();
+  const jiraClient = new JiraClient(config);
+  const toolRegistry = new ToolRegistry();
+  
+  const server = new JiraRequesterServer(jiraClient, toolRegistry);
+  server.run().catch(console.error);
+}
+
+main();
