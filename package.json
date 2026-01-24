@@ -11,7 +11,7 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.25.2",
+    "@modelcontextprotocol/sdk": "^1.25.3",
     "jira.js": "^5.2.2"
   },
   "devDependencies": {
