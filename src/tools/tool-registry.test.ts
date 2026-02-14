@@ -12,7 +12,10 @@ describe('ToolRegistry', () => {
       definition: {
         name: 'test_tool',
         description: 'A test tool',
-        inputSchema: {},
+        inputSchema: {
+          type: 'object',
+          properties: {},
+        },
       },
       validate: vi.fn(),
       execute: vi.fn(),
@@ -40,7 +43,10 @@ describe('ToolRegistry', () => {
         definition: {
           name: 'test_tool_2',
           description: 'Another test tool',
-          inputSchema: {},
+          inputSchema: {
+            type: 'object',
+            properties: {},
+          },
         },
         validate: vi.fn(),
         execute: vi.fn(),
