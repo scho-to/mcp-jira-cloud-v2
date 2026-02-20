@@ -39,14 +39,7 @@ export class GetJiraTicketHandler implements IToolHandler {
   }
 
   async execute(args: unknown): Promise<ToolResult> {
-    if (!this.isValidArgs(args)) {
-      return {
-        content: [{ type: 'text', text: 'Invalid arguments for get_jira_ticket' }],
-        isError: true
-      };
-    }
-
-    const validArgs: GetTicketArgs = args;
+    const validArgs = args as GetTicketArgs;
     const ticket = await this.jiraClient.getTicket(
       validArgs.ticket_id,
       validArgs.expand,
