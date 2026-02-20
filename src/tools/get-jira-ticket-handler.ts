@@ -72,6 +72,11 @@ export class GetJiraTicketHandler implements IToolHandler {
       return false;
     }
 
+    const ticketIdRegex = /^[A-Za-z0-9]+-\d+$/;
+    if (!ticketIdRegex.test(candidate['ticket_id'])) {
+      return false;
+    }
+
     if (candidate['expand'] !== undefined && !this.isStringArray(candidate['expand'])) {
       return false;
     }
