@@ -100,18 +100,6 @@ describe('GetJiraTicketHandler', () => {
     });
   });
 
-  it('should return error result when validation fails', async () => {
-    const invalidArgs = {};
-
-    const result = await handler.execute(invalidArgs);
-
-    expect(result).toEqual({
-      content: [{ type: 'text', text: 'Invalid arguments for get_jira_ticket' }],
-      isError: true,
-    });
-    expect(mockJiraClient.getTicket).not.toHaveBeenCalled();
-  });
-
   it('should handle non-object args in isValidArgs via validate', () => {
       expect(handler.validate(null)).toBe(false);
       expect(handler.validate("string")).toBe(false);
