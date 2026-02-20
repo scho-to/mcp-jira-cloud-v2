@@ -56,7 +56,7 @@ export class GetJiraTicketHandler implements IToolHandler {
     return {
       content: [{
         type: 'text',
-        text: JSON.stringify(ticket, null, 2)
+        text: JSON.stringify(ticket)
       }]
     };
   }

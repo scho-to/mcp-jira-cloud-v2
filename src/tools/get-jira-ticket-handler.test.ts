@@ -95,7 +95,7 @@ describe('GetJiraTicketHandler', () => {
     expect(result).toEqual({
       content: [{
         type: 'text',
-        text: JSON.stringify(mockTicket, null, 2),
+        text: JSON.stringify(mockTicket),
       }],
     });
   });
