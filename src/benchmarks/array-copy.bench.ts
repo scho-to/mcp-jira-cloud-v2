@@ -38,26 +38,26 @@ describe('ListTools Handler Optimization', () => {
   const largeRegistry = new ToolRegistry(1000);
 
   bench('Small Registry (10 tools) - Spread', () => {
-    return [...smallRegistry.getAllTools()];
+    [...smallRegistry.getAllTools()];
   });
 
   bench('Small Registry (10 tools) - Direct', () => {
-    return smallRegistry.getAllTools();
+    smallRegistry.getAllTools();
   });
 
   bench('Medium Registry (100 tools) - Spread', () => {
-    return [...mediumRegistry.getAllTools()];
+    [...mediumRegistry.getAllTools()];
   });
 
   bench('Medium Registry (100 tools) - Direct', () => {
-    return mediumRegistry.getAllTools();
+    mediumRegistry.getAllTools();
   });
 
   bench('Large Registry (1000 tools) - Spread', () => {
-    return [...largeRegistry.getAllTools()];
+    [...largeRegistry.getAllTools()];
   });
 
   bench('Large Registry (1000 tools) - Direct', () => {
-    return largeRegistry.getAllTools();
+    largeRegistry.getAllTools();
   });
 });
