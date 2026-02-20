@@ -62,7 +62,7 @@ class JiraRequesterServer {
    */
   private setupRequestHandlers(): void {
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
-      tools: [...this.toolRegistry.getAllTools()]
+      tools: this.toolRegistry.getAllTools()
     }));
 
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
