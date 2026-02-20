@@ -8,6 +8,7 @@ import type { IToolHandler, IToolRegistry } from '../types/index.js';
  */
 export class ToolRegistry implements IToolRegistry {
   private readonly handlers = new Map<string, IToolHandler>();
+  private cachedTools: readonly Tool[] | undefined;
 
   register(handler: IToolHandler): void {
     const toolName = handler.definition.name;
@@ -15,6 +16,7 @@ export class ToolRegistry implements IToolRegistry {
       throw new Error(`Tool '${toolName}' is already registered`);
     }
     this.handlers.set(toolName, handler);
+    this.cachedTools = undefined;
   }
 
   getHandler(toolName: string): IToolHandler | undefined {
@@ -22,6 +24,9 @@ export class ToolRegistry implements IToolRegistry {
   }
 
   getAllTools(): readonly Tool[] {
-    return Array.from(this.handlers.values()).map(h => h.definition);
+    if (!this.cachedTools) {
+      this.cachedTools = Array.from(this.handlers.values()).map(h => h.definition);
+    }
+    return this.cachedTools;
   }
 }
