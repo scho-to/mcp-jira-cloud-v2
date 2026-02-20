@@ -36,6 +36,22 @@ describe('GetJiraTicketHandler', () => {
     expect(handler.validate(invalidArgs)).toBe(false);
   });
 
+  it('should invalidate arguments with invalid ticket_id format', () => {
+      const invalidFormats = [
+          '123',
+          'PROJECT-',
+          '-123',
+          'PROJECT-123-ABC',
+          '../../etc/passwd',
+          'PROJECT_123'
+      ];
+
+      invalidFormats.forEach(ticket_id => {
+          const invalidArgs = { ticket_id };
+          expect(handler.validate(invalidArgs)).toBe(false);
+      });
+  });
+
   it('should invalidate arguments with invalid expand type', () => {
       const invalidArgs = {
         ticket_id: 'PROJ-123',
