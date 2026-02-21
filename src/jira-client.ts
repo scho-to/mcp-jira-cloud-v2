@@ -3,6 +3,7 @@ import type { Issues as Issue } from 'jira.js/version2';
 import type { IJiraClient, JiraConfig } from './types/index.js';
 
 const DEFAULT_FIELDS: readonly string[] = ['summary', 'description', 'comment'];
+const TICKET_ID_REGEX = /^[A-Za-z0-9]+-\d+$/;
 
 /**
  * Jira API client implementation.
@@ -33,6 +34,10 @@ export class JiraClient implements IJiraClient {
     expand?: readonly string[],
     fields?: readonly string[]
   ): Promise<Issue> {
+    if (!TICKET_ID_REGEX.test(ticketId)) {
+      throw new Error(`Invalid ticket ID format: ${ticketId}`);
+    }
+
     try {
       const effectiveFields = fields && fields.length > 0 ? fields : DEFAULT_FIELDS;
       const params = {
