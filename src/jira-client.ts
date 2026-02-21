@@ -34,11 +34,11 @@ export class JiraClient implements IJiraClient {
     fields?: readonly string[]
   ): Promise<Issue> {
     try {
-      const effectiveFields = fields && fields.length > 0 ? [...fields] : [...DEFAULT_FIELDS];
+      const effectiveFields = fields && fields.length > 0 ? fields : DEFAULT_FIELDS;
       const params = {
         issueIdOrKey: ticketId,
         expand: expand?.join(','),
-        fields: effectiveFields
+        fields: effectiveFields as string[]
       };
       return await this.client.issues.getIssue(params);
     } catch (error: unknown) {
