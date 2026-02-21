@@ -25,7 +25,12 @@ export class ToolRegistry implements IToolRegistry {
 
   getAllTools(): readonly Tool[] {
     if (!this.cachedTools) {
-      this.cachedTools = Array.from(this.handlers.values()).map(h => h.definition);
+      const tools: Tool[] = new Array(this.handlers.size);
+      let i = 0;
+      for (const h of this.handlers.values()) {
+        tools[i++] = h.definition;
+      }
+      this.cachedTools = tools;
     }
     return this.cachedTools;
   }
