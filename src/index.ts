@@ -44,7 +44,10 @@ class JiraRequesterServer {
     this.registerTools(jiraClient);
     this.setupRequestHandlers();
     
-    this.server.onerror = (error) => console.error('[Jira Requester Error]', error);
+    this.server.onerror = (error) => {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error('[Jira Requester Error]', message);
+    };
   }
 
   /**
@@ -107,7 +110,10 @@ function main(): void {
   const toolRegistry = new ToolRegistry();
   
   const server = new JiraRequesterServer(jiraClient, toolRegistry);
-  server.run().catch(console.error);
+  server.run().catch((error) => {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('[Jira Requester Error]', message);
+  });
 }
 
 main();
