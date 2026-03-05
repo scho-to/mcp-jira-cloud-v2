@@ -65,6 +65,11 @@ export class GetJiraTicketHandler implements IToolHandler {
       return false;
     }
 
+    const MAX_TICKET_ID_LENGTH = 100;
+    if (candidate['ticket_id'].length > MAX_TICKET_ID_LENGTH) {
+      return false;
+    }
+
     const ticketIdRegex = /^[A-Za-z0-9]+-\d+$/;
     if (!ticketIdRegex.test(candidate['ticket_id'])) {
       return false;
@@ -82,6 +87,7 @@ export class GetJiraTicketHandler implements IToolHandler {
   }
 
   private isStringArray(value: unknown): value is string[] {
-    return Array.isArray(value) && value.every(item => typeof item === 'string');
+    const MAX_ARRAY_SIZE = 100;
+    return Array.isArray(value) && value.length <= MAX_ARRAY_SIZE && value.every(item => typeof item === 'string');
   }
 }

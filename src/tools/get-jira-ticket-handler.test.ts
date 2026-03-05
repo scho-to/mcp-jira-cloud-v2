@@ -52,6 +52,12 @@ describe('GetJiraTicketHandler', () => {
       });
   });
 
+  it('should invalidate arguments with excessively long ticket_id', () => {
+      const longTicketId = 'A'.repeat(101) + '-123';
+      const invalidArgs = { ticket_id: longTicketId };
+      expect(handler.validate(invalidArgs)).toBe(false);
+  });
+
   it('should invalidate arguments with invalid expand type', () => {
       const invalidArgs = {
         ticket_id: 'PROJ-123',
@@ -72,6 +78,22 @@ describe('GetJiraTicketHandler', () => {
       const invalidArgs = {
         ticket_id: 'PROJ-123',
         fields: 'summary', // Should be array
+      };
+      expect(handler.validate(invalidArgs)).toBe(false);
+  });
+
+  it('should invalidate arguments with excessively large expand array', () => {
+      const invalidArgs = {
+        ticket_id: 'PROJ-123',
+        expand: new Array(101).fill('field'),
+      };
+      expect(handler.validate(invalidArgs)).toBe(false);
+  });
+
+  it('should invalidate arguments with excessively large fields array', () => {
+      const invalidArgs = {
+        ticket_id: 'PROJ-123',
+        fields: new Array(101).fill('field'),
       };
       expect(handler.validate(invalidArgs)).toBe(false);
   });
