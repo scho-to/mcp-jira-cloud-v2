@@ -13,6 +13,7 @@
     "verbatimModuleSyntax": true, // Recommended for ESM
 
     // Best practices
+    "types": ["node", "vitest"],
     "strict": true,
     "skipLibCheck": true,
     "noFallthroughCasesInSwitch": true,
