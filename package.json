@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
-    "jira.js": "^5.3.1"
+    "jira.js": "^5.4.0"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
