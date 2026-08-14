@@ -1,4 +1,4 @@
-import type { Issues as Issue } from 'jira.js/version2';
+import type { Issue } from 'jira.js/cloud';
 
 /**
  * Configuration for Jira client connection.

@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { JiraClient } from './jira-client.js';
 import type { JiraConfig } from './types/index.js';
-import { Version2Client } from 'jira.js/version2';
+import { createCloudClient } from 'jira.js';
 
-// Mock jira.js/version2
-vi.mock('jira.js/version2', () => {
+// Mock jira.js
+vi.mock('jira.js', () => {
   return {
-    Version2Client: vi.fn(),
+    createCloudClient: vi.fn(),
   };
 });
 
@@ -23,8 +23,8 @@ describe('JiraClient Security', () => {
   beforeEach(() => {
     mockGetIssue = vi.fn();
 
-    // Setup the mock implementation for Version2Client
-    (Version2Client as any).mockImplementation(function() {
+    // Setup the mock implementation for createCloudClient
+    (createCloudClient as any).mockImplementation(function() {
       return {
         issues: {
           getIssue: mockGetIssue,
