@@ -1,5 +1,5 @@
-import { Version2Client } from 'jira.js/version2';
-import type { Issues as Issue } from 'jira.js/version2';
+import { createCloudClient, type CloudClient } from 'jira.js';
+import type { Issue } from 'jira.js/cloud';
 import type { IJiraClient, JiraConfig } from './types/index.js';
 
 const DEFAULT_FIELDS: readonly string[] = ['summary', 'description', 'comment'];
@@ -11,20 +11,19 @@ const TICKET_ID_REGEX = /^[A-Za-z0-9]+-\d+$/;
  * Follows DIP by implementing IJiraClient interface and accepting config via constructor.
  */
 export class JiraClient implements IJiraClient {
-  private readonly client: Version2Client;
+  private readonly client: CloudClient;
 
   /**
    * Creates a new JiraClient with the given configuration.
    * @param config - Jira connection configuration (follows DIP)
    */
   constructor(config: JiraConfig) {
-    this.client = new Version2Client({
+    this.client = createCloudClient({
       host: config.host,
-      authentication: {
-        basic: {
-          email: config.email,
-          apiToken: config.apiToken,
-        },
+      auth: {
+        type: 'basic',
+        email: config.email,
+        apiToken: config.apiToken,
       },
     });
   }
