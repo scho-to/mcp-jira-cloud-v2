@@ -11,15 +11,15 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.30.0",
-    "jira.js": "^6.2.0"
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "jira.js": "^6.4.0"
   },
   "devDependencies": {
-    "@types/node": "^24.0.0",
-    "@vitest/coverage-v8": "^5.0.1",
+    "@types/node": "^26.6.6",
+    "@vitest/coverage-v8": "^5.1.0",
     "nodemon": "^3.1.14",
-    "ts-node": "^10.9.0",
+    "ts-node": "^10.9.2",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.1"
+    "vitest": "^5.1.0"
   }
 }
